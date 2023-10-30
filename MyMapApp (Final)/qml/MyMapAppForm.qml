@@ -108,6 +108,7 @@ Item {
         }
     }
 
+    // Step 2
     // Yes or No prompt to download offline area
     Rectangle {
         id: confirmationRect

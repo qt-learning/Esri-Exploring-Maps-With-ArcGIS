@@ -17,6 +17,10 @@ namespace Esri::ArcGISRuntime {
 class Map;
 class MapQuickView;
 
+// Step 1
+class Graphic;
+class PolylineBuilder;
+
 // Step 2
 class ArcGISVectorTiledLayer;
 class Basemap;
@@ -28,10 +32,6 @@ class OfflineMapTask;
 class ArcGISVectorTiledLayer;
 class ItemResourceCache;
 class VectorTileCache;
-
-// Step 4
-class Graphic;
-class PolylineBuilder;
 
 } // namespace Esri::ArcGISRuntime
 

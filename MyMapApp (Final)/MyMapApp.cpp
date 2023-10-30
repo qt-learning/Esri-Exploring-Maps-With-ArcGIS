@@ -16,11 +16,11 @@
 #include "MapTypes.h"
 #include "MapQuickView.h"
 
-// Step 1
+// Step 0
 #include "LocationDisplay.h"
 #include "MapViewTypes.h"
 
-// Step 2
+// Step 1
 #include "Graphic.h"
 #include "GraphicListModel.h"
 #include "GraphicsOverlay.h"
@@ -32,7 +32,7 @@
 #include "SpatialReference.h"
 #include "SymbolTypes.h"
 
-// Step 3
+// Step 2
 #include "ArcGISVectorTiledLayer.h"
 #include "Basemap.h"
 #include "GeometryEngine.h"
@@ -47,7 +47,7 @@
 #include <QFuture>
 #include <QStandardPaths>
 
-// Step 4
+// Step 3
 #include "ItemResourceCache.h"
 #include "VectorTileCache.h"
 
