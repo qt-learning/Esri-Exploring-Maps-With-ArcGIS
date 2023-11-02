@@ -101,9 +101,9 @@ void MyMapApp::setupTracking()
   m_mapView->graphicsOverlays()->append(graphicsOverlay);
 
   // Create and add a Graphic to show the user's path
-  m_offlineMapExtentGraphic = new Graphic(this);
-  m_offlineMapExtentGraphic->setSymbol(new SimpleLineSymbol(SimpleLineSymbolStyle::Solid, Qt::blue, 2, this));
-  graphicsOverlay->graphics()->append(m_offlineMapExtentGraphic);
+  m_pathGraphic = new Graphic(this);
+  m_pathGraphic->setSymbol(new SimpleLineSymbol(SimpleLineSymbolStyle::Solid, Qt::blue, 2, this));
+  graphicsOverlay->graphics()->append(m_pathGraphic);
 
   // Create a PolylineBuilder to construct lines given a set of points
   m_lineBuilder = new PolylineBuilder(SpatialReference::wgs84(), this);
@@ -117,7 +117,7 @@ void MyMapApp::setupTracking()
     m_mapView->locationDisplay()->setAutoPanMode(LocationDisplayAutoPanMode::CompassNavigation);
 
     m_lineBuilder->addPoint(l.position());
-    m_offlineMapExtentGraphic->setGeometry(m_lineBuilder->toGeometry());
+    m_pathGraphic->setGeometry(m_lineBuilder->toGeometry());
   });
 
 }

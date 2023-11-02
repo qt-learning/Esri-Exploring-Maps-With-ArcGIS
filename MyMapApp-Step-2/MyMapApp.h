@@ -71,7 +71,7 @@ private:
 
   // Step 1
   void setupTracking();
-  Esri::ArcGISRuntime::Graphic* m_offlineMapExtentGraphic = nullptr;
+  Esri::ArcGISRuntime::Graphic* m_pathGraphic = nullptr;
   Esri::ArcGISRuntime::PolylineBuilder* m_lineBuilder = nullptr;
   bool m_isTracking = false;
 
