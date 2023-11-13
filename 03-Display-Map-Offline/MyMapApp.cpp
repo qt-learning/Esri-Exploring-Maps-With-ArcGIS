@@ -54,7 +54,7 @@
 
 using namespace Esri::ArcGISRuntime;
 
-const QString vtpkPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+const QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 
 MyMapApp::MyMapApp(QObject* parent /* = nullptr */):
   QObject(parent),
@@ -144,40 +144,41 @@ void MyMapApp::createOfflineAreaFromExtent()
 void MyMapApp::exportVectorTiles(Esri::ArcGISRuntime::ArcGISVectorTiledLayer* vectorTileLayer)
 {
   // Create a new export task from the layer's source url
-  m_exportVectorTilesTask = new ExportVectorTilesTask(vectorTileLayer->url(), m_tempParent.get());
+  m_exportTask = new ExportVectorTilesTask(vectorTileLayer->url(), m_tempParent.get());
 
   // Create default parameters for the layer service
   // Normalize the central meridian in case the download area crosses the meridian
-  m_exportVectorTilesTask->createDefaultExportVectorTilesParametersAsync(GeometryEngine::normalizeCentralMeridian(m_mapView->visibleArea()), m_mapView->mapScale()*0.1)
+  m_exportTask->createDefaultExportVectorTilesParametersAsync(GeometryEngine::normalizeCentralMeridian(m_mapView->visibleArea()), m_mapView->mapScale()*0.1)
       .then(this, [this](const ExportVectorTilesParameters& defaultParams)
   {
-    QDir path(vtpkPath);
-
     // Remove any existing offline files
-    path.removeRecursively();
+    if (QDir().exists(appDataPath))
+    {
+      QDir path(appDataPath);
+      path.removeRecursively();
+    }
 
-    // Create the directory if it does not already exist
-    if (!QDir().exists(vtpkPath))
-      QDir().mkdir(vtpkPath);
+    // Create the directory 
+    QDir().mkpath(appDataPath);
 
-    const QString vtpkFileName = vtpkPath+"/vectorTiles.vtpk";
-    const QString itemResourcesPath = vtpkPath+"/itemResources";
+    const QString vtpkFileName = appDataPath+"/vectorTiles.vtpk";
+    const QString itemResourcesPath = appDataPath+"/itemResources";
 
     // Create a Job object to manage the export
-    m_exportVectorTilesJob = m_exportVectorTilesTask->exportVectorTiles(defaultParams, vtpkFileName, itemResourcesPath);
+    m_exportJob = m_exportTask->exportVectorTiles(defaultParams, vtpkFileName, itemResourcesPath);
 
     // Monitor the download progress and update the UI every time it changes
-    connect(m_exportVectorTilesJob, &Job::progressChanged, this, [this]()
+    connect(m_exportJob, &Job::progressChanged, this, [this]()
     {
-      m_downloadProgress = m_exportVectorTilesJob->progress();
+      m_downloadProgress = m_exportJob->progress();
       emit downloadProgressChanged();
     });
 
     // Display any errors in the console log
-    connect(m_exportVectorTilesJob, &Job::errorOccurred, this, [](const Error& e){qWarning() << e.message() << e.additionalMessage();});
+    connect(m_exportJob, &Job::errorOccurred, this, [](const Error& e){qWarning() << e.message() << e.additionalMessage();});
 
     // Once all async slots have been created, start the export
-    m_exportVectorTilesJob->start();
+    m_exportJob->start();
   });
 }
 
@@ -206,15 +207,15 @@ void MyMapApp::toggleOffline(bool offline)
 void MyMapApp::loadOfflineBasemaps()
 {
   // Check to see if any offline data exists
-  if (QFile::exists(vtpkPath+"/vectorTiles.vtpk"))
+  if (QFile::exists(appDataPath+"/vectorTiles.vtpk"))
   {
     // Create a VectorTileCache object from the offline data
-    m_vectorTileCache = new VectorTileCache(vtpkPath + "/vectorTiles.vtpk", m_tempParent.get());
+    m_vectorTileCache = new VectorTileCache(appDataPath + "/vectorTiles.vtpk", m_tempParent.get());
 
     // Check to see if any additional item resources exist and use them in the constructor if so
-    if (QFile::exists(vtpkPath+"/itemResources"))
+    if (QFile::exists(appDataPath+"/itemResources"))
     {
-      m_itemResourceCache = new ItemResourceCache(vtpkPath+"/itemResources", m_tempParent.get());
+      m_itemResourceCache = new ItemResourceCache(appDataPath+"/itemResources", m_tempParent.get());
       m_offlineLayer = new ArcGISVectorTiledLayer(m_vectorTileCache, m_itemResourceCache, m_tempParent.get());
     }
     else

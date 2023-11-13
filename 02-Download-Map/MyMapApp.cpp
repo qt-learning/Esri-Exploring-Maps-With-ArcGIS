@@ -50,7 +50,7 @@
 
 using namespace Esri::ArcGISRuntime;
 
-const QString vtpkPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+const QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/MyMapApp";
 
 MyMapApp::MyMapApp(QObject* parent /* = nullptr */):
   QObject(parent),
@@ -140,40 +140,41 @@ void MyMapApp::createOfflineAreaFromExtent()
 void MyMapApp::exportVectorTiles(Esri::ArcGISRuntime::ArcGISVectorTiledLayer* vectorTileLayer)
 {
   // Create a new export task from the layer's source url
-  m_exportVectorTilesTask = new ExportVectorTilesTask(vectorTileLayer->url(), m_tempParent.get());
+  m_exportTask = new ExportVectorTilesTask(vectorTileLayer->url(), m_tempParent.get());
 
   // Create default parameters for the layer service
   // Normalize the central meridian in case the download area crosses the meridian
-  m_exportVectorTilesTask->createDefaultExportVectorTilesParametersAsync(GeometryEngine::normalizeCentralMeridian(m_mapView->visibleArea()), m_mapView->mapScale()*0.1)
+  m_exportTask->createDefaultExportVectorTilesParametersAsync(GeometryEngine::normalizeCentralMeridian(m_mapView->visibleArea()), m_mapView->mapScale()*0.1)
       .then(this, [this](const ExportVectorTilesParameters& defaultParams)
   {
-    QDir path(vtpkPath);
-
     // Remove any existing offline files
-    path.removeRecursively();
+    if (QDir().exists(appDataPath))
+    {
+      QDir path(appDataPath);
+      path.removeRecursively();
+    }
 
-    // Create the directory if it does not already exist
-    if (!QDir().exists(vtpkPath))
-      QDir().mkdir(vtpkPath);
+    // Create the directory 
+    QDir().mkpath(appDataPath);
 
-    const QString vtpkFileName = vtpkPath+"/vectorTiles.vtpk";
-    const QString itemResourcesPath = vtpkPath+"/itemResources";
+    const QString vtpkFileName = appDataPath+"/vectorTiles.vtpk";
+    const QString itemResourcesPath = appDataPath+"/itemResources";
 
     // Create a Job object to manage the export
-    m_exportVectorTilesJob = m_exportVectorTilesTask->exportVectorTiles(defaultParams, vtpkFileName, itemResourcesPath);
+    m_exportJob = m_exportTask->exportVectorTiles(defaultParams, vtpkFileName, itemResourcesPath);
 
     // Monitor the download progress and update the UI every time it changes
-    connect(m_exportVectorTilesJob, &Job::progressChanged, this, [this]()
+    connect(m_exportJob, &Job::progressChanged, this, [this]()
     {
-      m_downloadProgress = m_exportVectorTilesJob->progress();
+      m_downloadProgress = m_exportJob->progress();
       emit downloadProgressChanged();
     });
 
     // Display any errors in the console log
-    connect(m_exportVectorTilesJob, &Job::errorOccurred, this, [](const Error& e){qWarning() << e.message() << e.additionalMessage();});
+    connect(m_exportJob, &Job::errorOccurred, this, [](const Error& e){qWarning() << e.message() << e.additionalMessage();});
 
     // Once all async slots have been created, start the export
-    m_exportVectorTilesJob->start();
+    m_exportJob->start();
   });
 }
 

@@ -80,8 +80,8 @@ private:
 
   Esri::ArcGISRuntime::Basemap* m_basemap = nullptr;
   Esri::ArcGISRuntime::OfflineMapTask* m_offlineMapTask = nullptr;
-  Esri::ArcGISRuntime::ExportVectorTilesJob* m_exportVectorTilesJob = nullptr;
-  Esri::ArcGISRuntime::ExportVectorTilesTask* m_exportVectorTilesTask = nullptr;
+  Esri::ArcGISRuntime::ExportVectorTilesJob* m_exportJob = nullptr;
+  Esri::ArcGISRuntime::ExportVectorTilesTask* m_exportTask = nullptr;
   std::unique_ptr<QObject> m_tempParent;
   int m_downloadProgress = 0;
 };
