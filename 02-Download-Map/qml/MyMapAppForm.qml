@@ -77,7 +77,6 @@ Item {
             icon.source: "qrc:/Resources/calcite-icons/download-32.svg"
             text: "Download area"
             display: AbstractButton.TextUnderIcon
-            visible: onlineSwitch.checked
             onClicked: {
                 confirmationRect.visible = true
             }

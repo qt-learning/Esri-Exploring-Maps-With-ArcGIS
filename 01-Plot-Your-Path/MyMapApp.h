@@ -21,35 +21,23 @@ class MapQuickView;
 class Graphic;
 class PolylineBuilder;
 
-// Step 2
-class ArcGISVectorTiledLayer;
-class Basemap;
-class ExportVectorTilesJob;
-class ExportVectorTilesTask;
-class OfflineMapTask;
-
-// Step 3
-class ArcGISVectorTiledLayer;
-class ItemResourceCache;
-class VectorTileCache;
-
 } // namespace Esri::ArcGISRuntime
 
 #include <QObject>
 
 Q_MOC_INCLUDE("MapQuickView.h")
 
-class MyMapApp : public QObject
-{
+class MyMapApp : public QObject {
   Q_OBJECT
 
-  Q_PROPERTY(Esri::ArcGISRuntime::MapQuickView* mapView READ mapView WRITE setMapView NOTIFY mapViewChanged)
+  Q_PROPERTY(Esri::ArcGISRuntime::MapQuickView *mapView READ mapView WRITE
+                 setMapView NOTIFY mapViewChanged)
 
   // Step 1
   Q_PROPERTY(bool isTracking MEMBER m_isTracking NOTIFY isTrackingChanged)
 
 public:
-  explicit MyMapApp(QObject* parent = nullptr);
+  explicit MyMapApp(QObject *parent = nullptr);
   ~MyMapApp() override;
 
 signals:
@@ -59,16 +47,16 @@ signals:
   void isTrackingChanged();
 
 private:
-  Esri::ArcGISRuntime::MapQuickView* mapView() const;
-  void setMapView(Esri::ArcGISRuntime::MapQuickView* mapView);
+  Esri::ArcGISRuntime::MapQuickView *mapView() const;
+  void setMapView(Esri::ArcGISRuntime::MapQuickView *mapView);
 
-  Esri::ArcGISRuntime::Map* m_map = nullptr;
-  Esri::ArcGISRuntime::MapQuickView* m_mapView = nullptr;
+  Esri::ArcGISRuntime::Map *m_map = nullptr;
+  Esri::ArcGISRuntime::MapQuickView *m_mapView = nullptr;
 
   // Step 1
   void setupTracking();
-  Esri::ArcGISRuntime::Graphic* m_pathGraphic = nullptr;
-  Esri::ArcGISRuntime::PolylineBuilder* m_lineBuilder = nullptr;
+  Esri::ArcGISRuntime::Graphic *m_pathGraphic = nullptr;
+  Esri::ArcGISRuntime::PolylineBuilder *m_lineBuilder = nullptr;
   bool m_isTracking = false;
 };
 
