@@ -1,15 +1,12 @@
-#-------------------------------------------------
-#  Copyright 2023 ESRI
+# Copyright (C) 2026 Esri.
+# You may freely redistribute and use this sample code, with or
+# without modification, provided you include the original copyright
+# notice and use restrictions.
+# See: https://resources.arcgis.com/en/sample-use-restrictions/
 #
-#  All rights reserved under the copyright laws of the United States
-#  and applicable international laws, treaties, and conventions.
-#
-#  You may freely redistribute and use this sample code, with or
-#  without modification, provided you include the original copyright
-#  notice and use restrictions.
-#
-#  See the Sample code usage restrictions document for further information.
-#-------------------------------------------------
+# Copyright (C) 2026 Qt Group.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+
 cmake_minimum_required(VERSION 3.5)
 
 project(MyMapApp LANGUAGES CXX)
@@ -56,8 +53,8 @@ else()
   qt_add_executable(MyMapApp MACOSX_BUNDLE ${SOURCE_FILES})
   # IOS uses static Runtimecore Framework
   if(IOS)
-    set_target_properties(MyMapApp PROPERTIES INSTALL_RPATH @executable_path/Frameworks 
-    XCODE_EMBED_FRAMEWORKS ${ArcGISRuntime_runtimecore_LIB} 
+    set_target_properties(MyMapApp PROPERTIES INSTALL_RPATH @executable_path/Frameworks
+    XCODE_EMBED_FRAMEWORKS ${ArcGISRuntime_runtimecore_LIB}
     XCODE_EMBED_FRAMEWORKS_CODE_SIGN_ON_COPY TRUE)
   endif()
   # On MacOSX add icon to app bundle.
