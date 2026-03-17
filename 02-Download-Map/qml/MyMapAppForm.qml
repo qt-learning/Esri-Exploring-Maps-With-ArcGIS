@@ -1,14 +1,11 @@
-// Copyright 2023 ESRI
-//
-// All rights reserved under the copyright laws of the United States
-// and applicable international laws, treaties, and conventions.
-//
+// Copyright (C) 2026 Esri.
 // You may freely redistribute and use this sample code, with or
 // without modification, provided you include the original copyright
 // notice and use restrictions.
+// See: https://resources.arcgis.com/en/sample-use-restrictions/
 //
-// See the Sample code usage restrictions document for further information.
-//
+// Copyright (C) 2026 Qt Group.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
 
 import QtQuick
 import QtQuick.Controls
